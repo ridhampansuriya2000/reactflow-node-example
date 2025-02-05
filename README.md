@@ -63,12 +63,14 @@ Ensure you have the following installed on your system:
 ## 🛠️ Built With
 
 - [React.js](https://reactjs.org/) - Frontend JavaScript library
-- [React Router](https://reactrouter.com/) - Client-side routing
-- [Tailwind CSS](https://tailwindcss.com/) - Utility-first CSS framework
+- [ReactFlow](https://reactflow.dev/) -A library for building interactive node-based editors and diagrams.
+- [Redux Toolkit](https://redux-toolkit.js.org/) -The official, opinionated, batteries-included toolset for efficient Redux development.
+- [Vite](https://redux-toolkit.js.org/) -A fast build tool for modern web applications.
+- [TypeScript](https://www.typescriptlang.org/) -A typed superset of JavaScript.
 
 ## 🌐 Live Demo
 
-Check out the live application: [ReactFlow-nodes on Vercel](https://reactflow-node-example.vercel.app/ )
+Check out the live application: [ReactFlow-nodes on Vercel](https://reactflow-node-example.vercel.app/)
 
 ## 📜 License
 
