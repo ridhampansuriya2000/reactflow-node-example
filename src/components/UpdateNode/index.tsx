@@ -11,6 +11,9 @@ import {RootState} from "../../store/store";
 import {resetState, setResetFlag} from "../../store/actions";
 import { OnNodesChange } from '@xyflow/react';
 import styles from './UpdateNode.module.css';
+import ReactFlowComponent from "./ReactFlowComponent";
+import NodeCustomizationPanel from "./NodeCustomizationPanel";
+import UndoRedoControls from "./UndoRedoControls";
 
 interface NodeData {
     id: string;
@@ -45,16 +48,6 @@ const UpdateNode = () => {
     const historyFromStore = useSelector((state: RootState) => state.history.history);
     const isReset = useSelector((state: RootState) => state.reset.isReset);
 
-    useEffect(() => {
-        if (isReset) {
-            setNodes(cloneDeep(nodesFromStore))
-            setEdges(edgesFromStore)
-            setHistory(historyFromStore)
-            dispatch(setResetFlag(false));
-        }
-    }, [isReset]);
-
-
     /** State for nodes and edges */
     const [nodes, setNodes, onNodesChange]:[NodeData[], React.Dispatch<React.SetStateAction<NodeData[]>>, OnNodesChange<NodeData>] = useNodesState(nodesFromStore);
     const [edges, setEdges, onEdgesChange] = useEdgesState(edgesFromStore);
@@ -67,6 +60,16 @@ const UpdateNode = () => {
     const [selectedNodeId, setSelectedNodeId] = useState<string | null>(null);
 
     const [history, setHistory] = useState(historyFromStore || { past: [], present: nodes, future: [] });
+
+    /** Reset initial state in redux */
+    useEffect(() => {
+        if (isReset) {
+            setNodes(cloneDeep(nodesFromStore))
+            setEdges(edgesFromStore)
+            setHistory(historyFromStore)
+            dispatch(setResetFlag(false));
+        }
+    }, [isReset]);
 
     /** Save history for undo/redo */
     const saveHistory = (newNodes, resetFuture = true) => {
@@ -116,26 +119,6 @@ const UpdateNode = () => {
     const nodeTypes = {
         selectorNode: ColorSelectorNode,
     };
-
-    // /** Update nodes and history while change node name */
-    // useEffect(() => {
-    //     if (selectedNodeId) {
-    //         const newNodes = nodes.map((node) => {
-    //             if (node.id === selectedNodeId) {
-    //                 return {
-    //                     ...node,
-    //                     data: {
-    //                         ...node.data,
-    //                         label: nodeName,
-    //                     },
-    //                 };
-    //             }
-    //             return node;
-    //         });
-    //         setNodes(cloneDeep(newNodes));
-    //         saveHistory(newNodes, false);
-    //     }
-    // }, [nodeName]);
 
     /** Handle node name change */
     const handleChangeNodeName = useCallback(
@@ -228,15 +211,9 @@ const UpdateNode = () => {
     };
 
     const onNodeDragStop = (node) =>{
-        console.log("node",node)
         saveHistory(nodes,false)
     }
 
-    const onEdgesChangeWithSelect = (node) => {
-        console.log('props, select', node);
-        setSelectedNodeId(node[0].id);
-        onEdgesChange(node);
-    };
 
     /** Handle node selection */
     const handleNodeClick = (event: React.MouseEvent|undefined, node: any) => {
@@ -266,77 +243,36 @@ const UpdateNode = () => {
         dispatch(setHistoryAction(history));
     },[history])
 
-    return (
-        <ReactFlow
-            nodes={nodes}
-            edges={edges}
-            onNodesChange={onNodesChangeWithSelect}
-            onEdgesChange={onEdgesChangeWithSelect}
-            defaultViewport={defaultViewport}
-            // onViewportChange={()=>{}}
-            minZoom={0.2}
-            style={{ background: '#F7F9FB' }}
-            maxZoom={4}
-            attributionPosition="bottom-left"
-            fitView
-            fitViewOptions={{ padding: 0.5 }}
-            onNodeClick={handleNodeClick}
-            nodeTypes={nodeTypes}
-            onNodeDragStop={onNodeDragStop}
-        >
-            <div className="update-node__controls">
-                <div className={styles.controls}>
-                    <label className={styles.label}>Selected Node: <span>{selectedNodeId || 'None'}</span></label>
-
-                    <div className={styles.buttonGroup}>
-                        <button onClick={undo} disabled={history.past.length === 0} className={`${styles.button} ${styles.UndoRedoBtn}`}>
-                            Undo
-                        </button>
-                        <button onClick={redo} disabled={history.future.length === 0} className={`${styles.button} ${styles.UndoRedoBtn}`}>
-                            Redo
-                        </button>
-                    </div>
-
-                    <label className={styles.label}>Label:</label>
-                    <input
-                        value={nodeName}
-                        onChange={(evt) => handleChangeNodeName(evt.target.value)}
-                        disabled={!selectedNodeId}
-                        className={styles.input}
-                    />
-
-                    <label className={styles.label}>Color:</label>
-                    <input
-                        type="color"
-                        value={nodeColor}
-                        onChange={(evt) => handleChangeColor(evt.target.value)}
-                        disabled={!selectedNodeId}
-                        className={styles.colorPicker}
-                    />
-
-                    <label className={styles.label}>Font Size:</label>
-                    <select
-                        value={nodeFontSize}
-                        onChange={(evt) => handleChangeFont(Number(evt.target.value))}
-                        disabled={!selectedNodeId}
-                        className={styles.select}
-                    >
-                        {Array.from({ length: 13 }, (_, i) => 12 + i).map((size) => (
-                            <option key={size} value={size}>{size}</option>
-                        ))}
-                    </select>
-
-                    <button
-                        onClick={async () => await dispatch(resetState())}
-                        className={`${styles.button} ${styles.resetButton}`}
-                    >
-                        Reset
-                    </button>
-                </div>
-            </div>
-            <Background />
-        </ReactFlow>
-    );
+    if(true){
+        return (
+            <>
+                <ReactFlowComponent
+                    nodes={nodes}
+                    edges={edges}
+                    onNodesChange={onNodesChangeWithSelect}
+                    onEdgesChange={() => {}}
+                    onNodeClick={handleNodeClick}
+                    onNodeDragStop={onNodeDragStop}
+                    nodeTypes={nodeTypes}
+                    defaultViewport={defaultViewport}
+                />
+                <NodeCustomizationPanel
+                    selectedNodeId={selectedNodeId}
+                    nodeName={nodeName}
+                    nodeColor={nodeColor}
+                    nodeFontSize={nodeFontSize}
+                    onNodeNameChange={handleChangeNodeName}
+                    onColorChange={handleChangeColor}
+                    onFontSizeChange={handleChangeFont}
+                    onReset={async () => await dispatch(resetState())}
+                    onUndo={undo}
+                    onRedo={redo}
+                    canUndo={history.past.length > 0}
+                    canRedo={history.future.length > 0}
+                />
+            </>
+        );
+    }
 };
 
 export default UpdateNode;
