@@ -19,7 +19,7 @@ interface NodeCustomizationPanelProps {
     canRedo: boolean;
 }
 
-const NodeCustomizationPanel: React.FC<NodeCustomizationPanelProps> = ({
+const NodeCustomizationPanel = ({
                                                                            selectedNodeId,
                                                                            nodeName,
                                                                            nodeColor,
@@ -32,7 +32,7 @@ const NodeCustomizationPanel: React.FC<NodeCustomizationPanelProps> = ({
                                                                            onRedo,
                                                                            canUndo,
                                                                            canRedo
-                                                                       }) => {
+                                                                       } : NodeCustomizationPanelProps) => {
     return (
         <div className="update-node__controls">
             <div className={styles.controls}>

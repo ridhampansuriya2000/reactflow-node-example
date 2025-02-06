@@ -7,7 +7,7 @@ interface FontSizeControlProps {
     disabled: boolean;
 }
 
-const FontSizeControl: React.FC<FontSizeControlProps> = ({ value, onChange, disabled }) => {
+const FontSizeControl = ({ value, onChange, disabled }:FontSizeControlProps) => {
     return (
         <select
             value={value}

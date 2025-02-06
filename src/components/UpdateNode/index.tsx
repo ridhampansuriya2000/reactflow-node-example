@@ -243,7 +243,6 @@ const UpdateNode = () => {
         dispatch(setHistoryAction(history));
     },[history])
 
-    if(true){
         return (
             <>
                 <ReactFlowComponent
@@ -272,7 +271,6 @@ const UpdateNode = () => {
                 />
             </>
         );
-    }
 };
 
 export default UpdateNode;

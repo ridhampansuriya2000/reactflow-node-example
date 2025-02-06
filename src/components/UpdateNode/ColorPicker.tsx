@@ -7,7 +7,7 @@ interface ColorPickerProps {
     disabled: boolean;
 }
 
-const ColorPicker: React.FC<ColorPickerProps> = ({ value, onChange, disabled }) => {
+const ColorPicker = ({ value, onChange, disabled } : ColorPickerProps) => {
     return (
         <input
             type="color"

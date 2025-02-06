@@ -14,7 +14,7 @@ interface ReactFlowComponentProps {
     defaultViewport: any;
 }
 
-const ReactFlowComponent: React.FC<ReactFlowComponentProps> = ({
+const ReactFlowComponent = ({
                                                                    nodes,
                                                                    edges,
                                                                    onNodesChange,
@@ -23,7 +23,7 @@ const ReactFlowComponent: React.FC<ReactFlowComponentProps> = ({
                                                                    onNodeDragStop,
                                                                    nodeTypes,
                                                                    defaultViewport,
-                                                               }) => {
+                                                               } : ReactFlowComponentProps) => {
     return (
         <ReactFlow
             nodes={nodes}

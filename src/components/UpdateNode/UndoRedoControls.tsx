@@ -8,7 +8,7 @@ interface UndoRedoControlsProps {
     canRedo: boolean;
 }
 
-const UndoRedoControls: React.FC<UndoRedoControlsProps> = ({ onUndo, onRedo, canUndo, canRedo }) => {
+const UndoRedoControls = ({ onUndo, onRedo, canUndo, canRedo } : UndoRedoControlsProps) => {
     return (
         <div className={styles.buttonGroup}>
             <button onClick={onUndo} disabled={!canUndo} className={`${styles.button} ${styles.UndoRedoBtn}`}>
