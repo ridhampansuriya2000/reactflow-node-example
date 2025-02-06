@@ -117,25 +117,50 @@ const UpdateNode = () => {
         selectorNode: ColorSelectorNode,
     };
 
-    /** Update nodes and history while change node name */
-    useEffect(() => {
-        if (selectedNodeId) {
-            const newNodes = nodes.map((node) => {
-                if (node.id === selectedNodeId) {
-                    return {
-                        ...node,
-                        data: {
-                            ...node.data,
-                            label: nodeName,
-                        },
-                    };
-                }
-                return node;
-            });
-            setNodes(cloneDeep(newNodes));
-            saveHistory(newNodes, false);
-        }
-    }, [nodeName]);
+    // /** Update nodes and history while change node name */
+    // useEffect(() => {
+    //     if (selectedNodeId) {
+    //         const newNodes = nodes.map((node) => {
+    //             if (node.id === selectedNodeId) {
+    //                 return {
+    //                     ...node,
+    //                     data: {
+    //                         ...node.data,
+    //                         label: nodeName,
+    //                     },
+    //                 };
+    //             }
+    //             return node;
+    //         });
+    //         setNodes(cloneDeep(newNodes));
+    //         saveHistory(newNodes, false);
+    //     }
+    // }, [nodeName]);
+
+    /** Handle node name change */
+    const handleChangeNodeName = useCallback(
+        (newName) => {
+            setNodeName(newName);
+
+            if (selectedNodeId && newName) {
+                const newNodes = nodes.map((node) => {
+                    if (node.id === selectedNodeId) {
+                        return {
+                            ...node,
+                            data: {
+                                ...node.data,
+                                label: newName,
+                            },
+                        };
+                    }
+                    return node;
+                });
+                setNodes(cloneDeep(newNodes));
+                debouncedSaveHistory(newNodes, 'node');
+            }
+        },
+        [nodes, selectedNodeId]
+    );
 
     /** Handle color change */
     const handleChangeColor = useCallback(
@@ -275,7 +300,7 @@ const UpdateNode = () => {
                     <label className={styles.label}>Label:</label>
                     <input
                         value={nodeName}
-                        onChange={(evt) => setNodeName(evt.target.value)}
+                        onChange={(evt) => handleChangeNodeName(evt.target.value)}
                         disabled={!selectedNodeId}
                         className={styles.input}
                     />

@@ -1,7 +1,10 @@
 import React, { Component, ReactNode } from "react";
+import {connect} from "react-redux";
+import {resetState} from "../store/actions";
 
 interface ErrorBoundaryProps {
     children: ReactNode;
+    resetState: () => void;
 }
 
 interface ErrorBoundaryState {
@@ -25,6 +28,7 @@ class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundaryState> {
 
     resetError = () => {
         this.setState({ hasError: false, error: null });
+        this.props.resetState()
     };
 
     render() {
@@ -41,4 +45,8 @@ class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundaryState> {
     }
 }
 
-export default ErrorBoundary;
+const mapDispatchToProps = (dispatch: any) => ({
+    resetState: () => dispatch(resetState()),
+});
+
+export default connect(null, mapDispatchToProps)(ErrorBoundary)
